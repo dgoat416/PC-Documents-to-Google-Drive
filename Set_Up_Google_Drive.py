@@ -57,7 +57,7 @@ def get_credentials():
             _auth.refresh_credentials(creds)
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials (1).json', SCOPES)
+             r"C:\Users\HP\Documents\Sync PC to Google Drive\PC-Documents-to-Google-Drive\credentials (1).json", SCOPES)
             creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
