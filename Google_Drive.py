@@ -170,33 +170,6 @@ class GoogleDrive:
 
         return files
 
-    # def get_all_items_in_drive(self):
-    #     gotFolders = True
-    #     foldersList = []
-    #     filesList = []
-    #     folder_id = 'root'
-    #     while gotFolders is True:
-    #         foldersList.extend(self.list_folders_from_folder_id(folder_id))
-    #         if len(foldersList) == 0:
-    #             gotFolders = False
-    #             continue
-    #         else:
-    #             filesList.extend(self.list_files_from_folder_id(folder_id))
-    #             folder_id = foldersList[0]['id']
-    #             foldersList.pop(0)
-    #
-    #     return filesList
-    #
-    #     #
-    #     # items = self.drive_service.files().list(
-    #     #     # q="'" + folder_id + "' in parents",
-    #     #     q="'root' in parents and trashed=false",
-    #     #     spaces='drive',
-    #     #     fields='nextPageToken, files(id, name, modifiedTime, mimeType, shared)',
-    #     #     orderBy='folder, name'
-    #     #     # page_token=page_token
-    #     #     # trashed = False
-    #     # ).execute().get('files', [])
 
     # Method to get all the new & updated files from documents folder and place them in google drive
     def pc_to_cloud(self, path, list=None):
@@ -224,13 +197,22 @@ class GoogleDrive:
                 driveFolders = google_object.list_folders_from_folder_id('root', list)
                 # driveFiles = google_object.get_all_items_in_drive(list)
 
-                #
-                if pc_folder in driveFolders['name']:
-                    # add to google drive if the windows version has a later date than the google docs version
-                    pass
-                else:
-                    # add to google drive
-                    pass
+
+                for folder in enumerate(driveFolders):
+                    # name of the folder from pc and drive match?
+                    if pc_folder == folder['name']:
+                        # if the windows version has a later date than the google docs version update google drive w/pc version
+                        if os.path.getmtime(pc_element_path) > folder['modifiedTime']:
+                            google_object.add_folder_to_drive(pc_element_path, folder['name'])
+
+                        # if the windows version has an earlier date than the google docs version update pc version from google drive
+                        elif os.path.getmtime(pc_element_path) < folder['modifiedTime']:
+                            google_object.download_file()
+                            
+
+                    else:
+                        # add to google drive
+                        pass
 
 
                 # for document in 
